@@ -1,0 +1,20 @@
+#!/bin/sh
+case "$1" in
+  start)
+    printf "Starting Wi-Fi...\n"
+    modprobe brcmfmac
+    ifconfig wlan0 up
+    wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+#    sleep 3
+    udhcpc -i wlan0 -b -t 3 -T 2
+    ;;
+  stop)
+    killall wpa_supplicant
+    ifconfig wlan0 down
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
+exit 0
